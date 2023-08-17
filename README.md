@@ -14,6 +14,7 @@
 5. ```npm install```
 6. ```npm run dev```
 7. ```php artisan serve```
+8. buka ```http://127.0.0.1:8000``` di browser.
 
 ## Daftar Route diundang
 
