@@ -24,6 +24,27 @@ export const useProductStore = defineStore('product', {
         }
         return obj
       })
+    },
+    filterProduct(index,data){
+      let result = []
+
+      if(index == "barqode") {
+        result = this.product.filter(item => item.barqode.includes(data))
+      }
+      if(index == "name") {
+        result = this.product.filter(item => item.name.includes(data))
+      }
+      if(index == "price") {
+        result = this.product.filter(item => item.price == data)
+      }
+      if(index == "profit") {
+        result = this.product.filter(item => item.profit == data)
+      }
+      if(index == "qty"){
+        result = this.product.filter(item => item.qty == data)
+      }
+
+      return result;
     }
   },
 })

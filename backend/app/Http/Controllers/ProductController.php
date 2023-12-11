@@ -80,7 +80,8 @@ class ProductController extends Controller
                 "income" => $histories->sum("price"),
                 "profit" => $histories->sum("profit"),
                 "histories"=> $histories,
-                "total" => $histories->count()
+                "total" => $histories->count(),
+                "labels" => []
             ]);
         }
 
@@ -90,7 +91,11 @@ class ProductController extends Controller
                 "income" => $histories->sum("price"),
                 "profit" => $histories->sum("profit"),
                 "histories"=> $histories,
-                "total" => $histories->count()
+                "total" => $histories->count(),
+                "labels" => $histories->pluck("created_at")->map(function($date) {
+                    return Carbon::parse($date)->format("d-m");
+                })->toArray(),
+                "value" => $histories->pluck("price")->toArray()    
             ]);
         }
 
@@ -100,7 +105,11 @@ class ProductController extends Controller
                 "income" => $histories->sum("price"),
                 "profit" => $histories->sum("profit"),
                 "histories"=> $histories,
-                "total" => $histories->count()
+                "total" => $histories->count(),
+                "labels" => $histories->pluck("created_at")->map(function($date) {
+                    return Carbon::parse($date)->format("d-m");
+                })->toArray(),
+                "value" => $histories->pluck("price")->toArray()    
             ]);
         }
 
@@ -110,7 +119,11 @@ class ProductController extends Controller
                 "income" => $histories->sum("price"),
                 "profit" => $histories->sum("profit"),
                 "histories"=> $histories,
-                "total" => $histories->count()
+                "total" => $histories->count(),
+                "labels" => $histories->pluck("created_at")->map(function($date) {
+                    return Carbon::parse($date)->format("d-m");
+                })->toArray(),
+                "value" => $histories->pluck("price")->toArray()    
             ]);
         }
 
@@ -120,6 +133,7 @@ class ProductController extends Controller
                 "income" => $histories->sum("price"),
                 "profit" => $histories->sum("profit"),
                 "histories"=> $histories,
+                "labels" => [],
                 "total" => $histories->count()
             ]);
         }
@@ -130,7 +144,11 @@ class ProductController extends Controller
             "income" => $histories->sum("price"),
             "profit" => $histories->sum("profit"),
             "histories"=> $histories,
-            "total" => $histories->count()
+            "total" => $histories->count(),
+            "labels" => $histories->pluck("created_at")->map(function($date) {
+                return Carbon::parse($date)->format("d-m");
+            })->toArray(),
+            "value" => $histories->pluck("price")->toArray()
         ]);
 
     }

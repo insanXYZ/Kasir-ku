@@ -4,6 +4,9 @@
     <Skeleton v-if="skeleton"></Skeleton>
     <TopBar :title="title" v-show="skeleton == false"  @filterToggle="filterToggle"></TopBar>
     <MainBar v-if="skeleton == false"  :income="income" :profit="profit" :total="total"></MainBar>
+    <div v-if="label.length >= 1 ">
+      <Bar :label="label" :value="value"></Bar>
+    </div>
     <Table v-if="skeleton == false"  :histories="histories"></Table>
   </BaseTemplate>
 </template>
@@ -18,6 +21,7 @@ import TopBar from "../components/Transaction/TopBar.vue"
 import MainBar from '../components/Transaction/MainBar.vue';
 import ModalFilter from '../components/Transaction/ModalFilter.vue';
 import Skeleton from '../components/Transaction/Skeleton.vue';
+import Bar from "../components/Transaction/Bar.vue"
 
 export default {
   data(){
@@ -28,7 +32,9 @@ export default {
       total : 0,
       modalFilter : false,
       skeleton : true,
-      title : "Bulan ini"
+      title : "Bulan ini",
+      label : [],
+      value : []
     }
   },
   created(){
@@ -41,6 +47,8 @@ export default {
       this.skeleton = true
       transaction(data).then(response => {
         let data = response.data
+        this.label = data.labels ? data.labels : [] 
+        this.value = data.value ? data.value : []
         this.skeleton = false
         this.income = data.income
         this.profit = data.profit
@@ -83,7 +91,8 @@ export default {
     TopBar,
     MainBar,
     ModalFilter,
-    Skeleton
+    Skeleton,
+    Bar
   },
   props: ["path"]
 }

@@ -2,15 +2,30 @@
   <ModalCreate v-if="modalCreate" @setModalCreate="setModalCreate() , getProductAPI()"></ModalCreate>
   <ModalUpdate v-if="modalUpdate" @setModalUpdate="setModalUpdate([])" @refresh="getProductAPI()" :data="dataUpdate"></ModalUpdate>
   <BaseTemplate :path="path" header="Produk">
-    <div class="flex items-center gap-4">
-      <ButtonMenu @click="setModalCreate">
-        <span class="font-work-b">+</span>
-        <span>Tambah Produk</span>
-      </ButtonMenu>
-      <ButtonMenu class="cursor-default">
-        <span class="font-work-b">!</span>
-        <span>{{ product.length }} Produk tersimpan</span>
-      </ButtonMenu>
+    <div class="flex items-center justify-between gap-4">
+      <div class="flex items-center gap-4">
+        <ButtonMenu @click="setModalCreate">
+          <span class="font-work-b">+</span>
+          <span>Tambah Produk</span>
+        </ButtonMenu>
+        <ButtonMenu class="cursor-default">
+          <span class="font-work-b">!</span>
+          <span>{{ product.length }} Produk tersimpan</span>
+        </ButtonMenu>
+      </div>
+      <div class="flex items-center justify-center gap-2">
+        <select v-model="kolom" class="p-[6px]">
+          <option value="barqode">Kode</option>
+          <option value="name">Nama</option>
+          <option value="qty">Jumlah</option>
+          <option value="price">Harga</option>
+          <option value="profit">Untung</option>
+        </select>
+        <form @submit.prevent="searchByKolom">
+          <input type="text" v-model="search" class="border p-1">
+          <button type="submit" class="bg-Abu text-white p-1">Cari</button>
+        </form>
+      </div>
     </div>
       <Table @setModalUpdate="item => setModalUpdate(item)" :product="product" @delete=" id => deleteProduct(id)"></Table>
   </BaseTemplate>
@@ -40,7 +55,9 @@ export default {
       modalCreate : false,
       product : [],
       modalUpdate : false,
-      dataUpdate: []
+      dataUpdate: [],
+      kolom: "barqode",
+      search : ""
     }
   },
   props: ["path"],
@@ -73,6 +90,11 @@ export default {
     setModalUpdate(dataUpdate){
       this.dataUpdate = dataUpdate
       this.modalUpdate = ! this.modalUpdate
+    },
+    searchByKolom(){
+      let store = useProductStore()
+      
+      this.product =  store.filterProduct(this.kolom,this.search)
     }
   }
 }

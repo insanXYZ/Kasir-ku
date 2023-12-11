@@ -48,7 +48,7 @@ export default {
         datasets: [
           {
             data: [this.yesterday, this.now],
-            backgroundColor: [ 'blue', 'green' ]
+            backgroundColor: [ 'blue' ]
           }
         ]
       };
