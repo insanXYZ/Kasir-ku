@@ -24,9 +24,7 @@
         <span class="font-work-b text-2xl">{{ toRupiah(price - discount) }}</span>
       </div>
       <hr>
-      <div @click="print" class="w-full bg-Abu py-1 font-work-b text-center text-white rounded-sm cursor-pointer">
-        Cetak
-      </div>
+      <input type="submit" @click="print" value="Print" class="w-full bg-Abu py-1 font-work-b text-center text-white rounded-sm cursor-pointer" />
     </div>
 </template>
 <script>

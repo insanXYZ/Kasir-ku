@@ -6,7 +6,7 @@
       <div class="flex flex-col w-full gap-5">
         <div class="flex justify-between items-center gap-10">
           <form @submit.prevent="store" class="flex items-center w-full shadow-md rounded-l-md rounded-r-full">
-            <input v-model="barqode" ref="input" type="text" class=" p-2 border-Abu bg-white w-full focus:outline-none" placeholder="tekan '/'">
+            <input v-model="barqode" ref="input" type="text" class=" p-2 border-Abu bg-white w-full focus:outline-none" placeholder="tekan '/'" autofocus>
             <button class="flex items-center justify-center p-[5px] border-none rounded-r-full bg-Abu"><img src="svg/search.svg" class="w-[33px]"></button>
           </form>
           <ButtonMenu @click="removeAll()">

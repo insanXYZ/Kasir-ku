@@ -16,7 +16,6 @@ class UserServiceImpl implements UserService {
   {
     $user = $this->user::create([
       "name" => $data["name"],
-      "cashier_id" => Str::random(8),
       "password" => Hash::make($data["password"])
     ]);
 
@@ -27,7 +26,7 @@ class UserServiceImpl implements UserService {
   
   public function login($data)
   {
-    $user = $this->user::where("cashier_id",$data["cashier_id"])->first();
+    $user = $this->user::where("name",$data["cashier_id"])->first();
     if (!$user || !Hash::check($data["password"], $user->password)) {
         return response([
           "message" => "Id kasir atau password salah"

@@ -51,12 +51,8 @@ function cashier(data){
   return axiosInstance.post("/product/cashier",data)
 }
 
-function dashboard(){
-  return axiosInstance.get("/product/dashboard")
+function dashboard(data = {}){
+  return axiosInstance.post("/product/dashboard",data)
 }
 
-function transaction(data = {}){
-  return axiosInstance.post("/product/transaction",data)
-}
-
-export {input,getProduct,deleteProduct,updateProduct,cashier,dashboard,transaction}
+export {input,getProduct,deleteProduct,updateProduct,cashier,dashboard}

@@ -4,7 +4,6 @@
     <div class="w-full flex flex-col gap-2 items-end overflow-y-auto">
       <Menu :pathNow="path" path="/" img="dashboard.svg">Dashboard</Menu>
       <Menu :pathNow="path" path="/product" img="product.svg">Produk</Menu>
-      <Menu :pathNow="path" path="/transaction" img="transaction.svg">Transaksi</Menu>
       <Menu :pathNow="path" path="/cashier" img="cashier.svg">Kasir</Menu>
     </div>
   </div>

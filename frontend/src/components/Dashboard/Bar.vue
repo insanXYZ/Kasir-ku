@@ -17,6 +17,7 @@ export default {
     return {
       chartData: null,
       chartOptions: {
+        maintainAspectRatio : false,
         responsive: true,
         plugins: {
           legend: {
@@ -26,15 +27,15 @@ export default {
       }
     }
   },
-  props: ["now" , "yesterday"],
+  props: ["label" , "value"],
   watch: {
-    now: {
+    label: {
       handler() {
         this.updateChartData();
       },
       immediate: true
     },
-    yesterday: {
+    value: {
       handler() {
         this.updateChartData();
       },
@@ -44,11 +45,11 @@ export default {
   methods: {
     updateChartData() {
       this.chartData = {
-        labels: ['Kemarin', 'Sekarang'],
+        labels: this.label,
         datasets: [
           {
-            data: [this.yesterday, this.now],
-            backgroundColor: [ 'blue' ]
+            data: this.value,
+            backgroundColor: [ 'blue','green','yellow' ]
           }
         ]
       };

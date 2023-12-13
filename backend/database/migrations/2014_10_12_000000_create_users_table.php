@@ -14,7 +14,6 @@ return new class extends Migration
         Schema::create('users', function (Blueprint $table) {
             $table->string("id")->primary();
             $table->string('name');
-            $table->string("cashier_id")->nullable(false);
             $table->string('password');
             $table->timestamps();
         });

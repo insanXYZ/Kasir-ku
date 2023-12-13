@@ -1,5 +1,5 @@
 <template>
-  <div class="w-screen h-screen fixed backdrop-blur-sm bg-black bg-opacity-10 flex justify-center items-center">
+  <div class="w-screen h-screen fixed backdrop-blur-sm bg-black bg-opacity-10 z-50 flex justify-center items-center">
     <form @submit.prevent="store" class="bg-white p-5 rounded-md flex flex-col gap-6">
       <span class="font-work-b">Buat produk</span>
       <div class="w-[400px] flex flex-col gap-3">

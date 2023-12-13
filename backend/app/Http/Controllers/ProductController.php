@@ -6,6 +6,8 @@ use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use App\Http\Requests\ProductRequest;
+use App\Http\Resources\tes;
+use App\Models\History;
 use App\Models\Product;
 use App\Services\Impl\HistoryServiceImpl;
 use App\Services\Impl\ProductServiceImpl;
@@ -61,21 +63,12 @@ class ProductController extends Controller
         
         $this->historyService->create("Beli",null,$data);
     }
-    public function dashboard(){
-        $data = DB::table("histories");
-        return response()->json([
-            "income_today" => $data->get()->whereBetween('created_at', [Carbon::now()->setTime(0,0)->format('Y-m-d H:i:s'), Carbon::now()->setTime(23,59,59)->format('Y-m-d H:i:s')])->sum("price"),
-            "income_yesterday" => $data->get()->whereBetween('created_at', [Carbon::yesterday()->setTime(0,0)->format('Y-m-d H:i:s'), Carbon::yesterday()->setTime(23,59,59)->format('Y-m-d H:i:s')])->sum("price"),
-            "transaction_today" => $data->get()->where("type","Beli")->whereBetween('created_at', [Carbon::now()->setTime(0,0)->format('Y-m-d H:i:s'), Carbon::now()->setTime(23,59,59)->format('Y-m-d H:i:s')])->count(),
-            "histories" => $data->where("type","Beli")->whereBetween('created_at', [Carbon::now()->setTime(0,0)->format('Y-m-d H:i:s'), Carbon::now()->setTime(23,59,59)->format('Y-m-d H:i:s')])->orderBy("id","desc")->lazy(5)
-        ]);
-    }
-    public function transaction(Request $request){
+    public function dashboard(Request $request){
 
-        $db = DB::table("histories")->where("type","Beli")->get();
+        $db = DB::table("histories")->where("type","Beli");
 
         if($request->getting == "day"){
-            $histories = $db->whereBetween("created_at",[Carbon::now()->setTime(0,0)->format('Y-m-d H:i:s') , Carbon::now()]);
+            $histories = $db->whereBetween("created_at",[Carbon::now()->setTime(0,0)->format('Y-m-d H:i:s') , Carbon::now()])->get();
             return response()->json([
                 "income" => $histories->sum("price"),
                 "profit" => $histories->sum("profit"),
@@ -86,49 +79,58 @@ class ProductController extends Controller
         }
 
         if($request->getting == "week"){
-            $histories = $db->whereBetween("created_at",[Carbon::now()->startOfWeek() , Carbon::now()]);
+            $histories = $db->whereBetween("created_at", [Carbon::now()->startOfWeek(), Carbon::now()])->oldest("created_at")->get();
+            $grouped = $histories->groupBy(function($item, $key) {
+                return Carbon::parse($item->created_at)->format('d-m');
+            });  
             return response()->json([
                 "income" => $histories->sum("price"),
                 "profit" => $histories->sum("profit"),
                 "histories"=> $histories,
                 "total" => $histories->count(),
-                "labels" => $histories->pluck("created_at")->map(function($date) {
-                    return Carbon::parse($date)->format("d-m");
-                })->toArray(),
-                "value" => $histories->pluck("price")->toArray()    
+                "labels" => $grouped->keys(),
+                "value" => $grouped->map(function($item) {
+                    return $item->sum('price');
+                })->values()
             ]);
         }
 
         if($request->getting == "month"){
-            $histories = $db->whereBetween("created_at",[Carbon::now()->startOfMonth() , Carbon::now()]);
+            $histories = $db->whereBetween("created_at",[Carbon::now()->startOfMonth() , Carbon::now()])->oldest("created_at")->get();
+            $grouped = $histories->groupBy(function($item, $key) {
+                return Carbon::parse($item->created_at)->format('d-m');
+            });  
             return response()->json([
                 "income" => $histories->sum("price"),
                 "profit" => $histories->sum("profit"),
                 "histories"=> $histories,
                 "total" => $histories->count(),
-                "labels" => $histories->pluck("created_at")->map(function($date) {
-                    return Carbon::parse($date)->format("d-m");
-                })->toArray(),
-                "value" => $histories->pluck("price")->toArray()    
+                "labels" => $grouped->keys(),
+                "value" => $grouped->map(function($item) {
+                    return $item->sum('price');
+                })->values()
             ]);
         }
 
         if($request->has('start') && $request->has('end')){
-            $histories = $db->whereBetween('created_at',[Carbon::parse($request->start)->setTime(0,0,0),Carbon::parse($request->end)->setTime(23,59,59)]);
+            $histories = $db->whereBetween('created_at',[Carbon::parse($request->start)->setTime(0,0,0),Carbon::parse($request->end)->setTime(23,59,59)])->oldest("created_at")->get();
+            $grouped = $histories->groupBy(function($item, $key) {
+                return Carbon::parse($item->created_at)->format('d-m');
+            });  
             return response()->json([
                 "income" => $histories->sum("price"),
                 "profit" => $histories->sum("profit"),
                 "histories"=> $histories,
                 "total" => $histories->count(),
-                "labels" => $histories->pluck("created_at")->map(function($date) {
-                    return Carbon::parse($date)->format("d-m");
-                })->toArray(),
-                "value" => $histories->pluck("price")->toArray()    
+                "labels" => $grouped->keys(),
+                "value" => $grouped->map(function($item) {
+                    return $item->sum('price');
+                })->values()
             ]);
         }
 
         if($request->has("date")){
-            $histories = $db->whereBetween('created_at',[Carbon::parse($request->date)->setTime(0,0),Carbon::parse($request->date)->setTime(23,59,59)]);
+            $histories = $db->whereBetween('created_at',[Carbon::parse($request->date)->setTime(0,0),Carbon::parse($request->date)->setTime(23,59,59)])->get();
             return response()->json([
                 "income" => $histories->sum("price"),
                 "profit" => $histories->sum("profit"),
@@ -138,17 +140,20 @@ class ProductController extends Controller
             ]);
         }
 
-        $histories = $db->whereBetween("created_at",[Carbon::now()->startOfMonth() , Carbon::now()]);
-
+        $histories = $db->whereBetween("created_at",[Carbon::now()->startOfMonth() , Carbon::now()])->oldest("created_at")->get();
+        $grouped = $histories->groupBy(function($item, $key) {
+            return Carbon::parse($item->created_at)->format('d-m');
+        });     
+        Log::info($grouped);
         return response()->json([
             "income" => $histories->sum("price"),
             "profit" => $histories->sum("profit"),
             "histories"=> $histories,
             "total" => $histories->count(),
-            "labels" => $histories->pluck("created_at")->map(function($date) {
-                return Carbon::parse($date)->format("d-m");
-            })->toArray(),
-            "value" => $histories->pluck("price")->toArray()
+            "labels" => $grouped->keys(),
+            "value" => $grouped->map(function($item) {
+                return $item->sum('price');
+            })->values()
         ]);
 
     }

@@ -1,35 +1,35 @@
 <template>
-  <div v-if="histories.length != 0" class="w-full flex flex-col gap-5">
-    <table class="min-w-full divide-y divide-gray-200 mb-20">
+  <table class="divide-y divide-gray-200 ">
       <thead class="bg-gray-200">
         <tr>
-          <Th class="w-[200px]">Tipe</Th>
+          <Th>Tanggal</Th>
           <Th>Deskripsi</Th>
+          <Th>Produk</Th>
+          <Th>Total</Th>
+          <Th>Keuntungan</Th>
         </tr>
-      </thead> 
-      <tbody class="bg-white divide-y divide-gray-200">
+      </thead>
+      <tbody class="bg-white divide-y divide-gray-200 ">
         <tr v-for="(item , i) in histories" :key="i" class="bg-white rounded-t-lg">
-          <TdList :data="item"></TdList>
+          <Td class="w-[180px]">{{ item.created_at }}</Td>
+          <Td>{{ item.description }}</Td>
+          <Td>{{ item.products }}</Td>
+          <Td>{{ item.price }}</Td>
+          <Td>{{ item.profit }}</Td>
         </tr>
       </tbody>
-    </table>  
-  </div>
+  </table>
 </template>
 <script>
-import Th from '../Dashboard/Table/Th.vue';
-import TdList from '../Dashboard/Table/TdList.vue';
+import Th from "./Table/Th.vue"
+import Td from "./Table/Td.vue"
 
 export default {
-  data(){
-    return {
-      search: ""
-    }
-  },
   components: {
     Th,
-    TdList
+    Td,
   },
-  props : ["histories"]
+  props: ["histories"]
 }
 
 </script>
