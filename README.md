@@ -1,5 +1,5 @@
-![image](./readme_asset/Dashboard.png)
-![image](./readme_asset/Login.png)
+![image](./readme_asset/Dashboard.PNG)
+![image](./readme_asset/Login.PNG)
 <p align="center"><strong>Kasir-Ku</strong></p>
 <p align="center"><sub>Laravel Vue Datatable Sanctum Tailwind</sub></p>
 <p align="center"><sub>Jangan lupa tekan 🌟</sub></p>
